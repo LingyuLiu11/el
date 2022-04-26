@@ -1,23 +1,29 @@
-import 'react-native-gesture-handler';
-import * as React from 'react';
-import { Text, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Home } from './screens/Home';
+import React from 'react';
+import { SafeAreaView, StatusBar, View, Text } from 'react-native';
+
+import PersonRenderer from './PersonRenderer';
 
 
-import { createDrawerNavigator } from '@react-navigation/drawer';
-
-const Drawer = createDrawerNavigator();
-
-
-export default function App() {
+const App = () => {
   return (
-    <NavigationContainer>
-      <Drawer.Navigator useLegacyImplementation>
-      <Drawer.Screen name="Home" component={Home} />
-      
-    </Drawer.Navigator>
-    </NavigationContainer>
+    <View>
+      <StatusBar barStyle="dark-content" />
+      <SafeAreaView>
+        <View
+          style={ {
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: 100,
+          } }>
+          <Text style={ {fontWeight: "bold", textAlign: "center"} }>
+            Back4App React Native Relay - Query Renderer List Example
+          </Text>
+          <PersonRenderer />
+        </View>
+      </SafeAreaView>
+    </View>
   );
-}
+};
+
+export default App;
