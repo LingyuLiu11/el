@@ -5,7 +5,8 @@ module.exports = function (api) {
       "babel-preset-expo",
     ],
     plugins: [
-      'relay'
+      'relay',
+      'react-native-reanimated/plugin'
     ]
   };
 };

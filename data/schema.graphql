@@ -26,7 +26,7 @@ input ACLInput {
 scalar Any
 
 # Use Inline Fragment on Array to get results: https://graphql.org/learn/queries/#inline-fragments
-union ArrayResult = Element | Role | User | B4aVehicle | Person
+union ArrayResult = Element | Role | Session | User | B4aVehicle | Person | Todo
 
 # The ArrayWhereInput input type is used in operations that involve filtering objects by a field of type Array.
 input ArrayWhereInput {
@@ -417,6 +417,64 @@ type CreateRolePayload {
   clientMutationId: String
 }
 
+# The CreateSessionFieldsInput input type is used in operations that involve creation of objects in the Session class.
+input CreateSessionFieldsInput {
+  ACL: ACLInput
+
+  # This is the object restricted.
+  restricted: Boolean
+
+  # This is the object user.
+  user: UserPointerInput
+
+  # This is the object installationId.
+  installationId: String
+
+  # This is the object sessionToken.
+  sessionToken: String
+
+  # This is the object expiresAt.
+  expiresAt: Date
+
+  # This is the object createdWith.
+  createdWith: Object
+}
+
+input CreateSessionInput {
+  # These are the fields that will be used to create the new object.
+  fields: CreateSessionFieldsInput
+  clientMutationId: String
+}
+
+type CreateSessionPayload {
+  # This is the created object.
+  session: Session!
+  clientMutationId: String
+}
+
+# The CreateTodoFieldsInput input type is used in operations that involve creation of objects in the Todo class.
+input CreateTodoFieldsInput {
+  ACL: ACLInput
+
+  # This is the object title.
+  title: String
+
+  # This is the object done.
+  done: Boolean
+}
+
+input CreateTodoInput {
+  # These are the fields that will be used to create the new object.
+  fields: CreateTodoFieldsInput
+  clientMutationId: String
+}
+
+type CreateTodoPayload {
+  # This is the created object.
+  todo: Todo!
+  clientMutationId: String
+}
+
 # The CreateUserFieldsInput input type is used in operations that involve creation of objects in the User class.
 input CreateUserFieldsInput {
   ACL: ACLInput
@@ -543,6 +601,30 @@ input DeleteRoleInput {
 type DeleteRolePayload {
   # This is the deleted object.
   role: Role!
+  clientMutationId: String
+}
+
+input DeleteSessionInput {
+  # This is the object id. You can use either the global or the object id.
+  id: ID!
+  clientMutationId: String
+}
+
+type DeleteSessionPayload {
+  # This is the deleted object.
+  session: Session!
+  clientMutationId: String
+}
+
+input DeleteTodoInput {
+  # This is the object id. You can use either the global or the object id.
+  id: ID!
+  clientMutationId: String
+}
+
+type DeleteTodoPayload {
+  # This is the deleted object.
+  todo: Todo!
   clientMutationId: String
 }
 
@@ -815,6 +897,15 @@ type Mutation {
   # The deleteRole mutation can be used to delete an object of the Role class.
   deleteRole(input: DeleteRoleInput!): DeleteRolePayload
 
+  # The createSession mutation can be used to create a new object of the Session class.
+  createSession(input: CreateSessionInput!): CreateSessionPayload
+
+  # The updateSession mutation can be used to update an object of the Session class.
+  updateSession(input: UpdateSessionInput!): UpdateSessionPayload
+
+  # The deleteSession mutation can be used to delete an object of the Session class.
+  deleteSession(input: DeleteSessionInput!): DeleteSessionPayload
+
   # The createUser mutation can be used to create a new object of the User class.
   createUser(input: CreateUserInput!): CreateUserPayload
 
@@ -841,6 +932,15 @@ type Mutation {
 
   # The deletePerson mutation can be used to delete an object of the Person class.
   deletePerson(input: DeletePersonInput!): DeletePersonPayload
+
+  # The createTodo mutation can be used to create a new object of the Todo class.
+  createTodo(input: CreateTodoInput!): CreateTodoPayload
+
+  # The updateTodo mutation can be used to update an object of the Todo class.
+  updateTodo(input: UpdateTodoInput!): UpdateTodoPayload
+
+  # The deleteTodo mutation can be used to delete an object of the Todo class.
+  deleteTodo(input: DeleteTodoInput!): DeleteTodoPayload
 
   # The createFile mutation can be used to create and upload a new file.
   createFile(input: CreateFileInput!): CreateFilePayload
@@ -1206,6 +1306,34 @@ type Query {
     options: ReadOptionsInput
   ): RoleConnection!
 
+  # The session query can be used to get an object of the Session class by its id.
+  session(
+    # This is the object id. You can use either the global or the object id.
+    id: ID!
+
+    # The read options for the query to be executed.
+    options: ReadOptionsInput
+  ): Session!
+
+  # The sessions query can be used to find objects of the Session class.
+  sessions(
+    # These are the conditions that the objects need to match in order to be found.
+    where: SessionWhereInput
+
+    # The fields to be used when sorting the data fetched.
+    order: [SessionOrder!]
+
+    # This is the number of objects that must be skipped to return.
+    skip: Int
+    after: String
+    first: Int
+    before: String
+    last: Int
+
+    # The read options for the query to be executed.
+    options: ReadOptionsInput
+  ): SessionConnection!
+
   # The user query can be used to get an object of the User class by its id.
   user(
     # This is the object id. You can use either the global or the object id.
@@ -1289,6 +1417,34 @@ type Query {
     # The read options for the query to be executed.
     options: ReadOptionsInput
   ): PersonConnection!
+
+  # The todo query can be used to get an object of the Todo class by its id.
+  todo(
+    # This is the object id. You can use either the global or the object id.
+    id: ID!
+
+    # The read options for the query to be executed.
+    options: ReadOptionsInput
+  ): Todo!
+
+  # The todos query can be used to find objects of the Todo class.
+  todos(
+    # These are the conditions that the objects need to match in order to be found.
+    where: TodoWhereInput
+
+    # The fields to be used when sorting the data fetched.
+    order: [TodoOrder!]
+
+    # This is the number of objects that must be skipped to return.
+    skip: Int
+    after: String
+    first: Int
+    before: String
+    last: Int
+
+    # The read options for the query to be executed.
+    options: ReadOptionsInput
+  ): TodoConnection!
 
   # The health query can be used to check if the server is up and running.
   health: Boolean!
@@ -1771,6 +1927,165 @@ type SendVerificationEmailPayload {
   clientMutationId: String
 }
 
+# The Session object type is used in operations that involve outputting objects of Session class.
+type Session implements ParseObject & Node {
+  # The ID of an object
+  id: ID!
+
+  # This is the object id.
+  objectId: ID!
+
+  # This is the date in which the object was created.
+  createdAt: Date!
+
+  # This is the date in which the object was las updated.
+  updatedAt: Date!
+  ACL: ACL!
+
+  # This is the object restricted.
+  restricted: Boolean
+
+  # This is the object user.
+  user: User
+
+  # This is the object installationId.
+  installationId: String
+
+  # This is the object sessionToken.
+  sessionToken: String
+
+  # This is the object expiresAt.
+  expiresAt: Date
+
+  # This is the object createdWith.
+  createdWith: Object
+}
+
+# A connection to a list of items.
+type SessionConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [SessionEdge]
+
+  # This is the total matched objecs count that is returned when the count flag is set.
+  count: Int!
+}
+
+# An edge in a connection.
+type SessionEdge {
+  # The item at the end of the edge
+  node: Session
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+# The SessionOrder input type is used when sorting objects of the Session class.
+enum SessionOrder {
+  objectId_ASC
+  objectId_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  ACL_ASC
+  ACL_DESC
+  restricted_ASC
+  restricted_DESC
+  user_ASC
+  user_DESC
+  installationId_ASC
+  installationId_DESC
+  sessionToken_ASC
+  sessionToken_DESC
+  expiresAt_ASC
+  expiresAt_DESC
+  createdWith_ASC
+  createdWith_DESC
+  id_ASC
+  id_DESC
+}
+
+# Allow to link OR add and link an object of the Session class.
+input SessionPointerInput {
+  # Link an existing object from Session class. You can use either the global or the object id.
+  link: ID
+
+  # Create and link an object from Session class.
+  createAndLink: CreateSessionFieldsInput
+}
+
+# Allow to add, remove, createAndAdd objects of the Session class into a relation field.
+input SessionRelationInput {
+  # Add existing objects from the Session class into the relation. You can use either the global or the object ids.
+  add: [ID!]
+
+  # Remove existing objects from the Session class out of the relation. You can use either the global or the object ids.
+  remove: [ID!]
+
+  # Create and add objects of the Session class into the relation.
+  createAndAdd: [CreateSessionFieldsInput!]
+}
+
+# The SessionRelationWhereInput input type is used in operations that involve filtering objects of Session class.
+input SessionRelationWhereInput {
+  # Run a relational/pointer query where at least one child object can match.
+  have: SessionWhereInput
+
+  # Run an inverted relational/pointer query where at least one child object can match.
+  haveNot: SessionWhereInput
+
+  # Check if the relation/pointer contains objects.
+  exists: Boolean
+}
+
+# The SessionWhereInput input type is used in operations that involve filtering objects of Session class.
+input SessionWhereInput {
+  # This is the object objectId.
+  objectId: IdWhereInput
+
+  # This is the object createdAt.
+  createdAt: DateWhereInput
+
+  # This is the object updatedAt.
+  updatedAt: DateWhereInput
+
+  # This is the object ACL.
+  ACL: ObjectWhereInput
+
+  # This is the object restricted.
+  restricted: BooleanWhereInput
+
+  # This is the object user.
+  user: UserRelationWhereInput
+
+  # This is the object installationId.
+  installationId: StringWhereInput
+
+  # This is the object sessionToken.
+  sessionToken: StringWhereInput
+
+  # This is the object expiresAt.
+  expiresAt: DateWhereInput
+
+  # This is the object createdWith.
+  createdWith: ObjectWhereInput
+
+  # This is the object id.
+  id: IdWhereInput
+
+  # This is the OR operator to compound constraints.
+  OR: [SessionWhereInput!]
+
+  # This is the AND operator to compound constraints.
+  AND: [SessionWhereInput!]
+
+  # This is the NOR operator to compound constraints.
+  NOR: [SessionWhereInput!]
+}
+
 input SignUpInput {
   fields: CreateUserFieldsInput
   clientMutationId: String
@@ -1852,6 +2167,133 @@ input SubqueryInput {
 input TextInput {
   # This is the search to be executed.
   search: SearchInput!
+}
+
+# The Todo object type is used in operations that involve outputting objects of Todo class.
+type Todo implements ParseObject & Node {
+  # The ID of an object
+  id: ID!
+
+  # This is the object id.
+  objectId: ID!
+
+  # This is the date in which the object was created.
+  createdAt: Date!
+
+  # This is the date in which the object was las updated.
+  updatedAt: Date!
+  ACL: ACL!
+
+  # This is the object title.
+  title: String
+
+  # This is the object done.
+  done: Boolean
+}
+
+# A connection to a list of items.
+type TodoConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [TodoEdge]
+
+  # This is the total matched objecs count that is returned when the count flag is set.
+  count: Int!
+}
+
+# An edge in a connection.
+type TodoEdge {
+  # The item at the end of the edge
+  node: Todo
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+# The TodoOrder input type is used when sorting objects of the Todo class.
+enum TodoOrder {
+  objectId_ASC
+  objectId_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  ACL_ASC
+  ACL_DESC
+  title_ASC
+  title_DESC
+  done_ASC
+  done_DESC
+  id_ASC
+  id_DESC
+}
+
+# Allow to link OR add and link an object of the Todo class.
+input TodoPointerInput {
+  # Link an existing object from Todo class. You can use either the global or the object id.
+  link: ID
+
+  # Create and link an object from Todo class.
+  createAndLink: CreateTodoFieldsInput
+}
+
+# Allow to add, remove, createAndAdd objects of the Todo class into a relation field.
+input TodoRelationInput {
+  # Add existing objects from the Todo class into the relation. You can use either the global or the object ids.
+  add: [ID!]
+
+  # Remove existing objects from the Todo class out of the relation. You can use either the global or the object ids.
+  remove: [ID!]
+
+  # Create and add objects of the Todo class into the relation.
+  createAndAdd: [CreateTodoFieldsInput!]
+}
+
+# The TodoRelationWhereInput input type is used in operations that involve filtering objects of Todo class.
+input TodoRelationWhereInput {
+  # Run a relational/pointer query where at least one child object can match.
+  have: TodoWhereInput
+
+  # Run an inverted relational/pointer query where at least one child object can match.
+  haveNot: TodoWhereInput
+
+  # Check if the relation/pointer contains objects.
+  exists: Boolean
+}
+
+# The TodoWhereInput input type is used in operations that involve filtering objects of Todo class.
+input TodoWhereInput {
+  # This is the object objectId.
+  objectId: IdWhereInput
+
+  # This is the object createdAt.
+  createdAt: DateWhereInput
+
+  # This is the object updatedAt.
+  updatedAt: DateWhereInput
+
+  # This is the object ACL.
+  ACL: ObjectWhereInput
+
+  # This is the object title.
+  title: StringWhereInput
+
+  # This is the object done.
+  done: BooleanWhereInput
+
+  # This is the object id.
+  id: IdWhereInput
+
+  # This is the OR operator to compound constraints.
+  OR: [TodoWhereInput!]
+
+  # This is the AND operator to compound constraints.
+  AND: [TodoWhereInput!]
+
+  # This is the NOR operator to compound constraints.
+  NOR: [TodoWhereInput!]
 }
 
 # The UpdateB4aVehicleFieldsInput input type is used in operations that involve creation of objects in the B4aVehicle class.
@@ -1950,6 +2392,70 @@ input UpdateRoleInput {
 type UpdateRolePayload {
   # This is the updated object.
   role: Role!
+  clientMutationId: String
+}
+
+# The UpdateSessionFieldsInput input type is used in operations that involve creation of objects in the Session class.
+input UpdateSessionFieldsInput {
+  ACL: ACLInput
+
+  # This is the object restricted.
+  restricted: Boolean
+
+  # This is the object user.
+  user: UserPointerInput
+
+  # This is the object installationId.
+  installationId: String
+
+  # This is the object sessionToken.
+  sessionToken: String
+
+  # This is the object expiresAt.
+  expiresAt: Date
+
+  # This is the object createdWith.
+  createdWith: Object
+}
+
+input UpdateSessionInput {
+  # This is the object id. You can use either the global or the object id.
+  id: ID!
+
+  # These are the fields that will be used to update the object.
+  fields: UpdateSessionFieldsInput
+  clientMutationId: String
+}
+
+type UpdateSessionPayload {
+  # This is the updated object.
+  session: Session!
+  clientMutationId: String
+}
+
+# The UpdateTodoFieldsInput input type is used in operations that involve creation of objects in the Todo class.
+input UpdateTodoFieldsInput {
+  ACL: ACLInput
+
+  # This is the object title.
+  title: String
+
+  # This is the object done.
+  done: Boolean
+}
+
+input UpdateTodoInput {
+  # This is the object id. You can use either the global or the object id.
+  id: ID!
+
+  # These are the fields that will be used to update the object.
+  fields: UpdateTodoFieldsInput
+  clientMutationId: String
+}
+
+type UpdateTodoPayload {
+  # This is the updated object.
+  todo: Todo!
   clientMutationId: String
 }
 
