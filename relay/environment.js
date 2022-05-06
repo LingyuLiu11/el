@@ -5,6 +5,18 @@ export const getSessionToken = async () => {
     return sessionToken;
   };
 
+  export const getToken = async () => {
+    const sessionToken = await getSessionToken();
+  
+    if (sessionToken) {
+      return {
+        "X-Parse-Session-Token": sessionToken,
+      };
+    }
+  
+    return {};
+  };
+
 const fetchQuery = async (request, variables) => {
   const body = JSON.stringify({
     query: request.text,
@@ -17,6 +29,7 @@ const fetchQuery = async (request, variables) => {
     "X-Parse-Application-Id": "tVmwKuouk2tVvnYSRPcSAUEnslwoTddNJP4A9cs8",
     "X-Parse-Master-Key": "3mRFWdQmA0RTD7qV971fk3jNEAOyc9qz8dUtMhpt",
     "X-Parse-Client-Key": "xE7dG6JQSjCxinNVDy5GWFWsqlX7YK5Fy9Nl7RUj",
+    ...await getToken(),
   };
 
   try {
@@ -27,6 +40,11 @@ const fetchQuery = async (request, variables) => {
     });
 
     const data = await response.json();
+
+    if (response.status === 401) {
+        await AsyncStorage.getItem("sessionToken");
+        return;
+      }
 
     if (data.errors) {
       throw data.errors;
