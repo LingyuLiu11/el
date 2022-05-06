@@ -1,4 +1,9 @@
 import { Environment, Network, RecordSource, Store } from "relay-runtime";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+export const getSessionToken = async () => {
+    const sessionToken = await AsyncStorage.getItem("sessionToken");
+    return sessionToken;
+  };
 
 const fetchQuery = async (request, variables) => {
   const body = JSON.stringify({
