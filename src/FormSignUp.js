@@ -3,12 +3,39 @@ import { Button, Text, TextInput, View, TouchableOpacity } from "react-native";
 import { useFormik, FormikProvider } from 'formik';
 import Styles from './style';
 import environment from '../relay/environment';
+import SignUpMutation from './mutations/SignUpMutation';
 
 const SignUp = () => {
   const [userCreated, setUserCreated] = useState();
 
   const onSubmit = (values) => {
     // @todo the mutation will be implemented here
+    const {username, password} = values;
+
+    const input = {
+        fields: {
+            username,
+            password,
+        }
+    }
+
+    SignUpMutation.commit({
+        environment,
+        input,
+        onCompleted: ({signUp}) => {
+            const {viewer} = signUp;
+            const {sessionToken, user} = viewer;
+
+            if (sessionToken !== null) {
+                alert(`user ${user.usename} successfuly created`);
+                setUserCreated(user);
+                return;
+            }
+        },
+        onError: (errors) => {
+            alert(errors[0].message);
+        }
+    })
   };
 
   const formikbag = useFormik({
@@ -49,7 +76,7 @@ const SignUp = () => {
           />
           <TouchableOpacity onPress={() => handleSubmit()}>
             <View style={Styles.button}>
-              <Text style={Styles.button_label}>{"Sign in"}</Text>
+              <Text style={Styles.button_label}>{"Sign Up"}</Text>
             </View>
           </TouchableOpacity>
         </View>
