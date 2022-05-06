@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import TodoListQueryRenderer from './TodoListQueryRenderer';
 import { Home } from './screens/Home';
 import PersonRenderer from './PersonRenderer';
+import SignUp from './FormSignUp';
 
 
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -20,6 +21,7 @@ export default function App() {
       <Drawer.Screen name="Home" component={Home} />
       <Drawer.Screen name="To do" component={TodoListQueryRenderer} />
       <Drawer.Screen name="Person" component={PersonRenderer} />
+      <Drawer.Screen name="Sign up" component={SignUp} />
       
     </Drawer.Navigator>
     </NavigationContainer>
