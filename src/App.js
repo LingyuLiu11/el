@@ -7,6 +7,7 @@ import TodoListQueryRenderer from './TodoListQueryRenderer';
 import { Home } from './screens/Home';
 import PersonRenderer from './PersonRenderer';
 import SignUp from './FormSignUp';
+import SignIn from './SignIn';
 
 
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -22,6 +23,7 @@ export default function App() {
       <Drawer.Screen name="To do" component={TodoListQueryRenderer} />
       <Drawer.Screen name="Person" component={PersonRenderer} />
       <Drawer.Screen name="Sign up" component={SignUp} />
+      <Drawer.Screen name="Sign In" component={SignIn} />
       
     </Drawer.Navigator>
     </NavigationContainer>
