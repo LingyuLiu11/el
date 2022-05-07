@@ -10,9 +10,7 @@ export function Home() {
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text>Home</Text>
         <Text>test111</Text>
-        <Button onPress={clearAsyncStorage}>
-          <Text>Clear Async Storage</Text>
-        </Button>
+        
       </View>
     );
   }

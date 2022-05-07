@@ -16,6 +16,7 @@ const UserLoggedRenderer = () => {
         <Text>User {user?.username || user?.email} logged</Text>
         <Text>Created: {user?.createdAt} </Text>
         <Text>Updated: {user?.updatedAt} </Text>
+        <Text>test success</Text>
       </View>
     );
   };
@@ -42,6 +43,7 @@ const UserLoggedRenderer = () => {
           return (
             <View>
               <Text>{error.message}</Text>
+              <Text>test error</Text>
             </View>
           );
         } else if (props) {
@@ -50,6 +52,7 @@ const UserLoggedRenderer = () => {
         return (
           <View>
             <Text>loading</Text>
+            <Text>test loading</Text>
           </View>
         );
       }}

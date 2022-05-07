@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Text, TextInput, View, TouchableOpacity } from "react-native";
 import { useFormik, FormikProvider } from 'formik';
-import Styles from './style';
+import Styles from './Style';
 import environment from '../relay/environment';
 import SignUpMutation from './mutations/SignUpMutation';
 

@@ -42,20 +42,20 @@ const fetchQuery = async (request, variables) => {
     const data = await response.json();
 
     if (response.status === 401) {
-      await AsyncStorage.getItem("sessionToken");
-      return;
+        await AsyncStorage.getItem("sessionToken");
+        return;
+      }
+  
+      if (data.errors) {
+        throw data.errors;
+      }
+  
+      return data;
+    } catch (err) {
+      console.log("err on fetch graphql", err);
+  
+      throw err;
     }
-
-    if (data.errors) {
-      throw data.errors;
-    }
-
-    return data;
-  } catch (err) {
-    console.log("err on fetch graphql", err);
-
-    throw err;
-  }
 };
 
 const environment = new Environment({
