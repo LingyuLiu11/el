@@ -6,7 +6,7 @@ import { Text, View } from "react-native";
 const UserLoggedRenderer = () => {
   const renderContent = (viewer) => {
     if (!viewer?.user) {
-      return null;
+      return <Text>User logged</Text>;
     }
 
     const { user } = viewer;
@@ -19,6 +19,7 @@ const UserLoggedRenderer = () => {
       </View>
     );
   };
+
   return (
     <QueryRenderer
       environment={environment}
@@ -44,9 +45,8 @@ const UserLoggedRenderer = () => {
             </View>
           );
         } else if (props) {
-            return renderContent(props.viewer);
+          return renderContent(props.viewer);
         }
-
         return (
           <View>
             <Text>loading</Text>

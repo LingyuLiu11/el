@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from "react";
-import environment, { getSessionToken } from "../relay/environment";
+import environment, {getSessionToken} from "../relay/environment";
 import { FormikProvider, useFormik } from "formik";
 import { Button, Text, TextInput, View, TouchableOpacity } from "react-native";
-import Styles from "./style";
+
 import LogInMutation from "./mutations/LogInMutation";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import UserLoggedRenderer from "./UserLoggedRenderer";
 
-const SignIn = () => {
-  //   const [userLogged, setUserLogged] = useState(null);
-  const [sessionToken, setSessionToken] = useState(null);
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import LogOutMutation from "./mutations/LogOutMutation";
 
-  const clearAsyncStorage = async () => {
-    AsyncStorage.clear();
-  };
+
+
+import Styles from "./style";
+
+const SignIn = () => {
+  const [sessionToken, setSessionToken] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -22,9 +24,24 @@ const SignIn = () => {
     })();
   }, []);
 
-  const onSubmit = async (values) => {
-    // @todo the mutation will be implemented here
+  const handleLogout = async () => {
+    LogOutMutation.commit({
+      environment,
+      input: {},
+      onCompleted: async () => {
+        await AsyncStorage.removeItem("sessionToken");
+        setSessionToken(null);
+        alert("User successfully logged out");
+      },
+      onError: (errors) => {
+        alert(errors[0].message);
+      },
+    });
+  };
+
+  const onSubmit = (values) => {
     const { username, password } = values;
+
     const input = {
       username,
       password,
@@ -34,18 +51,17 @@ const SignIn = () => {
       environment,
       input,
       onCompleted: async (response) => {
-        if (!response?.logIn || response?.logIn == null) {
-          alert("Error while logging in");
+        if (!response?.logIn || response?.logIn === null) {
+          alert("Error while logging");
           return;
         }
 
-        const viewer = response?.logIn;
-        const { sessionToken, user } = viewer;
+        const { viewer } = response?.logIn;
+        const { sessionToken } = viewer;
 
         if (sessionToken !== null) {
-          // setUserLogged(user);
           setSessionToken(sessionToken);
-          alert(`user successfully logged in`);
+          // setUserLogged(user);
           await AsyncStorage.setItem("sessionToken", sessionToken);
           return;
         }
@@ -66,20 +82,12 @@ const SignIn = () => {
 
   const { handleSubmit, setFieldValue } = formikbag;
 
-  //   if (userLogged?.id) {
-  //     return (
-  //       <View style={ {marginTop: 15, alignItems: 'center'} }>
-  //         <Text>User {userLogged.name} logged</Text>
-  //       </View>
-  //     );
-  //   }
-
   if (sessionToken) {
     return (
-      
-        
+      <>
         <UserLoggedRenderer />
-      
+        <Button title={"logout"} onPress={() => handleLogout()} />
+      </>
     );
   }
 
@@ -94,7 +102,7 @@ const SignIn = () => {
             autoCapitalize="none"
             onChangeText={(text) => setFieldValue("username", text)}
           />
-          <Text>Password</Text>
+          <Text style={{ marginTop: 15 }}>Password</Text>
           <TextInput
             style={Styles.form_input}
             name={"password"}

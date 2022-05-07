@@ -1,21 +1,22 @@
 import { Environment, Network, RecordSource, Store } from "relay-runtime";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-export const getSessionToken = async () => {
-    const sessionToken = await AsyncStorage.getItem("sessionToken");
-    return sessionToken;
-  };
 
-  export const getToken = async () => {
-    const sessionToken = await getSessionToken();
-  
-    if (sessionToken) {
-      return {
-        "X-Parse-Session-Token": sessionToken,
-      };
-    }
-  
-    return {};
-  };
+export const getSessionToken = async () => {
+  const sessionToken = await AsyncStorage.getItem("sessionToken");
+  return sessionToken;
+};
+
+export const getToken = async () => {
+  const sessionToken = await getSessionToken();
+
+  if (sessionToken) {
+    return {
+      "X-Parse-Session-Token": sessionToken,
+    };
+  }
+
+  return {};
+};
 
 const fetchQuery = async (request, variables) => {
   const body = JSON.stringify({
@@ -27,9 +28,8 @@ const fetchQuery = async (request, variables) => {
     Accept: "application/json",
     "Content-type": "application/json",
     "X-Parse-Application-Id": "tVmwKuouk2tVvnYSRPcSAUEnslwoTddNJP4A9cs8",
-    "X-Parse-Master-Key": "3mRFWdQmA0RTD7qV971fk3jNEAOyc9qz8dUtMhpt",
     "X-Parse-Client-Key": "xE7dG6JQSjCxinNVDy5GWFWsqlX7YK5Fy9Nl7RUj",
-    ...await getToken(),
+    ...(await getToken()),
   };
 
   try {
@@ -42,9 +42,9 @@ const fetchQuery = async (request, variables) => {
     const data = await response.json();
 
     if (response.status === 401) {
-        await AsyncStorage.getItem("sessionToken");
-        return;
-      }
+      await AsyncStorage.getItem("sessionToken");
+      return;
+    }
 
     if (data.errors) {
       throw data.errors;
@@ -59,8 +59,8 @@ const fetchQuery = async (request, variables) => {
 };
 
 const environment = new Environment({
-    network: Network.create(fetchQuery),
-    store: new Store(new RecordSource()),
-  });
-  
-  export default environment;
+  network: Network.create(fetchQuery),
+  store: new Store(new RecordSource()),
+});
+
+export default environment;

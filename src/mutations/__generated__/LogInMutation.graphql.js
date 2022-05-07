@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<805cc0158e0966b200f74e75db9680fa>>
+ * @generated SignedSource<<c422caf45b208af02d237a47966aed7e>>
  * @flow
  * @lightSyntaxTransform
  * @nogrep
@@ -24,8 +24,9 @@ export type LogInMutation$data = {|
     +viewer: {|
       +user: {|
         +id: string,
-        +username: ?string,
         +createdAt: any,
+        +updatedAt: any,
+        +username: ?string,
       |},
       +sessionToken: string,
     |},
@@ -87,14 +88,21 @@ v1 = [
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "username",
+                "name": "createdAt",
                 "storageKey": null
               },
               {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "createdAt",
+                "name": "updatedAt",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "username",
                 "storageKey": null
               }
             ],
@@ -132,17 +140,17 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "d82fd1366dd26c8afb7046c815a3ce73",
+    "cacheID": "b226e92f1cb36a52a8a23cd3985ea971",
     "id": null,
     "metadata": {},
     "name": "LogInMutation",
     "operationKind": "mutation",
-    "text": "mutation LogInMutation(\n  $input: LogInInput!\n) {\n  logIn(input: $input) {\n    viewer {\n      user {\n        id\n        username\n        createdAt\n      }\n      sessionToken\n    }\n  }\n}\n"
+    "text": "mutation LogInMutation(\n  $input: LogInInput!\n) {\n  logIn(input: $input) {\n    viewer {\n      user {\n        id\n        createdAt\n        updatedAt\n        username\n      }\n      sessionToken\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node/*: any*/).hash = "6e6922a1d8ae2930b1b1e93d82cefdd0";
+(node/*: any*/).hash = "002663537815693116d46ba9618b8e49";
 
 module.exports = ((node/*: any*/)/*: Mutation<
   LogInMutation$variables,

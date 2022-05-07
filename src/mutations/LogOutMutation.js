@@ -1,17 +1,9 @@
 import { commitMutation, graphql } from "react-relay";
 
 const mutation = graphql`
-  mutation LogInMutation($input: LogInInput!) {
-    logIn(input: $input) {
-      viewer {
-        user {
-          id
-          createdAt
-          updatedAt
-          username
-        }
-        sessionToken
-      }
+  mutation LogOutMutation($input: LogOutInput!) {
+    logOut(input: $input) {
+      clientMutationId
     }
   }
 `;
